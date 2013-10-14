@@ -31,6 +31,7 @@ syntax match ChessGoodMove /![!?]\?/
 syntax match ChessGoodMoveBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)[RNBQ]\)\%([[:space:]]*\%(#\|++\?\)\)\?\|[a-h]x[a-h][36]\%([[:space:]]*e\.\?p\.\?\%([[:space:]]*\%(#\|++\?\)\)\?\)\?\|O-O\%(-O\)\?\)\)\@<=[[:space:]]*![!?]\?/
 
 highlight link ChessGoodMove Type
+" highlight ChessGoodMove term=underline cterm=bold ctermfg=72 gui=bold guifg=SeaGreen
 highlight ChessGoodMoveBlack term=underline cterm=bold ctermfg=72 gui=bold guifg=SeaGreen ctermbg=215 guibg=tan1
 
 " Bad move: ?!, ?, ??
@@ -39,6 +40,7 @@ syntax match ChessBadMove /?[?!]\?/
 syntax match ChessBadMoveBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)[RNBQ]\)\%([[:space:]]*\%(#\|++\?\)\)\?\|[a-h]x[a-h][36]\%([[:space:]]*e\.\?p\.\?\%([[:space:]]*\%(#\|++\?\)\)\?\)\?\|O-O\%(-O\)\?\)\)\@<=[[:space:]]*?[?!]\?/
 
 highlight link ChessBadMove WarningMsg
+" highlight ChessBadMove term=standout ctermfg=196 guifg=Red
 highlight ChessBadMoveBlack term=standout ctermfg=196 guifg=Red ctermbg=215 guibg=tan1
 
 " Rook, kNight, Bishop, Queen, King
