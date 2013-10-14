@@ -1,91 +1,86 @@
 syntax clear
-
 syntax case match
 
 " Folding
 syntax region ChessGameFold start=/^[[:space:]]*\[[[:space:]]*Date/ end=/\n\ze[[:space:]]*\[[[:space:]]*Event/ transparent fold
 
-syntax keyword ChessKeyword Event Site Date Round White Black WhiteElo BlackElo Result Annotator PlyCount TimeControl Time Termination Mode FEN
+" Comments: ;, {...}
+syntax match  ChessComment /;.*$/
+syntax region ChessComment start=/{/ end=/}/
+highlight link ChessComment Comment
 
+" Move numbers: (1.) e4 (1...) e5
+syntax match ChessMoveNumber /[[:digit:]]\+[[:space:]]*\.\%(\.\.\)\?/
+highlight link ChessMoveNumber LineNr
+
+" Result
+syntax match ChessResult #1-0\|½-½\|1/2-1/2\|0-1\|\%([[:digit:]]\..\{-}\)\@<=\*#
+highlight link ChessResult Normal
+
+" Tags: {{{1
+syntax keyword ChessKeyword Event Site Date Round White Black WhiteElo BlackElo Result Annotator PlyCount TimeControl Time Termination Mode FEN
 highlight link ChessKeyword Normal
 
 " Tag value: [key "value"]
 syntax match ChessString /".*"/
-
 highlight link ChessString PreProc
 
-" Comments: ;, {}
-syntax match  ChessComment /;.*$/
-syntax region ChessComment start=/{/ end=/}/
-
-highlight link ChessComment Comment
-
-" Move number: 1.
-syntax match ChessMoveNumber /[[:digit:]]\+[[:space:]]*\.\%(\.\.\)\?/
-
-highlight link ChessMoveNumber LineNr
-
-" Good move: !?, !, !!
+" Good move: !?, !, !! {{{1
 syntax match ChessGoodMove /![!?]\?/
-" Rc2xa2!, cxd4!, g4!, axb8=Q!, a8=Q!, axb3ep!
-syntax match ChessGoodMoveBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)[RNBQ]\)\%([[:space:]]*\%(#\|++\?\)\)\?\|[a-h]x[a-h][36]\%([[:space:]]*e\.\?p\.\?\%([[:space:]]*\%(#\|++\?\)\)\?\)\?\|O-O\%(-O\)\?\)\)\@<=[[:space:]]*![!?]\?/
-
 highlight link ChessGoodMove Type
 " highlight ChessGoodMove term=underline cterm=bold ctermfg=72 gui=bold guifg=SeaGreen
+
+" Rc2xa2!, cxd4!, g4!, axb8=Q!, a8=Q!, axb3ep!
+syntax match ChessGoodMoveBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)[RNBQ]\)\%([[:space:]]*\%(#\|++\?\)\)\?\|[a-h]x[a-h][36]\%([[:space:]]*e\.\?p\.\?\%([[:space:]]*\%(#\|++\?\)\)\?\)\?\|O-O\%(-O\)\?\)\)\@<=[[:space:]]*![!?]\?/
 highlight ChessGoodMoveBlack term=underline cterm=bold ctermfg=72 gui=bold guifg=SeaGreen ctermbg=215 guibg=tan1
 
-" Bad move: ?!, ?, ??
+" Bad move: ?!, ?, ?? {{{1
 syntax match ChessBadMove /?[?!]\?/
-" Rc2xa2?, cxd4?, g4?, axb8=Q?, a8=Q?, axb3ep?
-syntax match ChessBadMoveBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)[RNBQ]\)\%([[:space:]]*\%(#\|++\?\)\)\?\|[a-h]x[a-h][36]\%([[:space:]]*e\.\?p\.\?\%([[:space:]]*\%(#\|++\?\)\)\?\)\?\|O-O\%(-O\)\?\)\)\@<=[[:space:]]*?[?!]\?/
-
 highlight link ChessBadMove WarningMsg
 " highlight ChessBadMove term=standout ctermfg=196 guifg=Red
+
+" Rc2xa2?, cxd4?, g4?, axb8=Q?, a8=Q?, axb3ep?
+syntax match ChessBadMoveBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)[RNBQ]\)\%([[:space:]]*\%(#\|++\?\)\)\?\|[a-h]x[a-h][36]\%([[:space:]]*e\.\?p\.\?\%([[:space:]]*\%(#\|++\?\)\)\?\)\?\|O-O\%(-O\)\?\)\)\@<=[[:space:]]*?[?!]\?/
 highlight ChessBadMoveBlack term=standout ctermfg=196 guifg=Red ctermbg=215 guibg=tan1
 
-" Rook, kNight, Bishop, Queen, King
+" Rook, kNight, Bishop, Queen, King {{{1
 " Ex: (N)c3xb5, h8=(Q), axb8=(R)
 syntax match ChessStrongPiece /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\)\@<=\%([RNBQK]\%([a-h][1-8]\?\)\?\)\%(x\?[a-h][1-8]\)\@=\|\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\%([a-h]x\)\?[a-h][18]=\)\@<=[RNBQ]/
-syntax match ChessStrongPieceBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([RNBQK]\%([a-h][1-8]\?\)\?\)\%(x\?[a-h][1-8]\)\@=\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)\)\@<=[RNBQ]/
-
 highlight link ChessStrongPiece Statement
+
+syntax match ChessStrongPieceBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([RNBQK]\%([a-h][1-8]\?\)\?\)\%(x\?[a-h][1-8]\)\@=\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([a-h]x[a-h][18]=\|\<[a-h][18]=\)\)\@<=[RNBQ]/
 highlight ChessStrongPieceBlack term=bold cterm=bold ctermfg=131 gui=bold guifg=Brown ctermbg=215 guibg=tan1
 
-" File: (f)xg4ep
+" File: (f)xg4ep {{{1
 syntax match ChessFile /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\)\@<=[a-h]\%(x[a-h]\%([18]\%([[:space:]]*e\.\?p\.\?\)\@!\|[36]=\@!\|[2457]\%([[:space:]]*e\.\?p\.\?\|=\)\@!\)\)\@=/
-syntax match ChessFileBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<![a-h]\%(x[a-h]\%([18]\%([[:space:]]*e\.\?p\.\?\)\@!\|[36]=\@!\|[2457]\%([[:space:]]*e\.\?p\.\?\|=\)\@!\)\)\@=/
-
 highlight link ChessFile Statement
+
+syntax match ChessFileBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<![a-h]\%(x[a-h]\%([18]\%([[:space:]]*e\.\?p\.\?\)\@!\|[36]=\@!\|[2457]\%([[:space:]]*e\.\?p\.\?\|=\)\@!\)\)\@=/
 highlight ChessFileBlack term=bold cterm=bold ctermfg=131 gui=bold guifg=Brown ctermbg=215 guibg=tan1
 
-" Pawn / case: d3, Ra3x(d3), cx(d3)ep
+" Pawn / case: d3, Ra3x(d3), cx(d3)ep {{{1
 syntax match ChessCase /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\)\@<=\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\)\@<=[RNBQK]\%([a-h][1-8]\?\)\?x\?\)\@<=[a-h][1-8]\%(\>\|e\.\?p\.\?\)\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\)\@<=\<[a-h]x\)\@<=[a-h]\%([18]\%([[:space:]]*e\.\?p\.\?\)\@!\|[36]=\@!\|[2457]\%([[:space:]]*e\.\?p\.\?\|=\)\@!\)/
-syntax match ChessCaseBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\)\)\@<=[a-h][1-8]\%(\>\|e\.\?p\.\?\)\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\<[a-h]x\)\)\@<=[a-h]\%([18]\%([[:space:]]*e\.\?p\.\?\)\@!\|[36]=\@!\|[2457]\%([[:space:]]*e\.\?p\.\?\|=\)\@!\)/
-
 highlight link ChessCase Special
+
+syntax match ChessCaseBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\<[a-h]\%([18]\|[2-7]=\@!\)\>\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\)\)\@<=[a-h][1-8]\%(\>\|e\.\?p\.\?\)\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\<[a-h]x\)\)\@<=[a-h]\%([18]\%([[:space:]]*e\.\?p\.\?\)\@!\|[36]=\@!\|[2457]\%([[:space:]]*e\.\?p\.\?\|=\)\@!\)/
 highlight ChessCaseBlack term=bold ctermfg=104 guifg=SlateBlue ctermbg=215 guibg=tan1
 
-" Castling: O-O, O-O-O
+" Castling: O-O, O-O-O {{{1
 syntax match ChessCastling /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]\+\)\@<=\%(0-0\%(-0\)\?\|O-O\%(-O\)\?\)/
-syntax match ChessCastlingBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(0-0\%(-0\)\?\|O-O\%(-O\)\?\)/
-
 highlight link ChessCastling Statement
+
+syntax match ChessCastlingBlack /\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(0-0\%(-0\)\?\|O-O\%(-O\)\?\)/
 highlight ChessCastlingBlack term=bold cterm=bold ctermfg=131 gui=bold guifg=Brown ctermbg=215 guibg=tan1
 
-" Capture, check, checkmate, promotion, en passant
+" Capture, check, checkmate, promotion, en passant {{{1
 syntax match ChessAction /[x#=]\|++\?\|e\.\?p\.\?/
 " x, #/+/++, ep, =
-syntax match ChessActionBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([RNBQK]\%([a-h][1-8]\?\)\?\|\<[a-h]\)\)\@<=x\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\%([a-h]x\|\<\)[a-h][18]=[RNBQ]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|[a-h]x[a-h][36][[:space:]]*e\.\?p\.\?\)\)\@<=\%([[:space:]]*\%(#\|++\?\)\)\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<![a-h]x[a-h][36]\)\@<=[[:space:]]*e\.\?p\.\?\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([a-h]x[a-h][18]\|\<[a-h][18]\)\)\@<==[RNBQ]\@=/
-
 highlight link ChessAction Constant
+
+syntax match ChessActionBlack /\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([RNBQK]\%([a-h][1-8]\?\)\?\|\<[a-h]\)\)\@<=x\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%(\%([RNBQK]\%([a-h][1-8]\?\)\?x\?\|\<[a-h]x\)[a-h][1-8]\|\%([a-h]x\|\<\)[a-h][18]=[RNBQ]\|\<[a-h]\%([18]\|[2-7]=\@!\)\>\|[a-h]x[a-h][36][[:space:]]*e\.\?p\.\?\)\)\@<=\%([[:space:]]*\%(#\|++\?\)\)\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<![a-h]x[a-h][36]\)\@<=[[:space:]]*e\.\?p\.\?\|\%(\%([[:digit:]]\.\%(\.\.\)\?[[:space:]]*\)\@<!\%([a-h]x[a-h][18]\|\<[a-h][18]\)\)\@<==[RNBQ]\@=/
 highlight ChessActionBlack term=underline ctermfg=201 guifg=Magenta ctermbg=215 guibg=tan1
 
-" Result
-syntax match ChessResult #1-0\|½-½\|1/2-1/2\|0-1\|\%([[:digit:]]\..\{-}\)\@<=\*#
-
-highlight link ChessResult Normal
-
-" Errors
+" Errors {{{1
 " One error at a time, several won't be highlighted
 " Note: \zs and \ze do not work here (bug?)
 
